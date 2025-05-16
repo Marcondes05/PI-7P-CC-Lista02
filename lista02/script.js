@@ -8,6 +8,7 @@ const products = [
 ];
 
 let cart = [];
+const selectedSizes = {};
 
 function formatCurrency(value) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -35,12 +36,10 @@ function renderProducts() {
   });
 }
 
-const selectedSizes = {};
-
 function selectSize(productId, size, button) {
   selectedSizes[productId] = size;
 
-  // remover "active" de todos os botões
+  // remover "active" de todos os botões do produto
   document.querySelectorAll(`#size-buttons-${productId} .size-button`).forEach(btn => {
     btn.classList.remove("active");
   });
@@ -65,6 +64,11 @@ function addToCart(id) {
   } else {
     cart.push({ ...product, key, size, quantity: 1 });
   }
+
+  // Resetar seleção visual após adicionar
+  const buttons = document.querySelectorAll(`#size-buttons-${id} .size-button`);
+  buttons.forEach(btn => btn.classList.remove("active"));
+  delete selectedSizes[id];
 
   renderCart();
 }
